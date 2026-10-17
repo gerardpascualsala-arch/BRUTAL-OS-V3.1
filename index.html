@@ -1,0 +1,3159 @@
+<!DOCTYPE html>
+<html lang="es" data-level="intermediate">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0b10">
+  <meta name="description" content="BRUTAL OS v3.1: genera entrenamientos por bloques adaptados a tu nivel.">
+  <title>BRUTAL OS v3.1</title>
+  <style>
+:root {
+  color-scheme: dark;
+  --bg: #0a0b10;
+  --bg-soft: #10121a;
+  --surface: #151822;
+  --surface-2: #1c202d;
+  --surface-3: #232839;
+  --border: #2e3447;
+  --border-strong: #414962;
+  --text: #f4f6fb;
+  --muted: #abb1c2;
+  --quiet: #868da1;
+  --accent: #9d6bff;
+  --accent-2: #c5a6ff;
+  --accent-deep: #6036ca;
+  --accent-soft: #201735;
+  --success: #3bd7a0;
+  --success-soft: #102a23;
+  --rest: #43a9f4;
+  --rest-soft: #10273a;
+  --warm: #f0a44a;
+  --warm-soft: #2c2011;
+  --danger: #ff7168;
+  --shadow: 0 18px 60px rgba(0, 0, 0, .34);
+  --radius: 18px;
+  --radius-lg: 28px;
+  --display: "Bebas Neue", Impact, sans-serif;
+  --body: "DM Sans", system-ui, sans-serif;
+  --mono: "DM Mono", ui-monospace, monospace;
+}
+
+html[data-level="beginner"] {
+  --accent: #37c98b;
+  --accent-2: #8ee9c0;
+  --accent-deep: #197a55;
+  --accent-soft: #102a22;
+}
+
+html[data-level="pro"] {
+  --accent: #ff694f;
+  --accent-2: #ffae92;
+  --accent-deep: #b73727;
+  --accent-soft: #321714;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--bg);
+  font-size: 16px;
+}
+
+body {
+  min-height: 100dvh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 84% 2%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 28rem),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  transition: background-color .25s ease, color .25s ease;
+}
+
+button {
+  min-height: 44px;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--accent-2);
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+.shell {
+  width: min(100%, 620px);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: calc(22px + env(safe-area-inset-top));
+  padding-bottom: 18px;
+}
+
+.brand {
+  font-family: var(--display);
+  font-size: 2.15rem;
+  letter-spacing: .055em;
+  line-height: .9;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.brand sup {
+  margin-left: 5px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .55rem;
+  letter-spacing: .12em;
+  vertical-align: top;
+}
+
+.brand-sub {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.icon-button {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--border-strong);
+  border-radius: 15px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 1.1rem;
+}
+
+.home-content {
+  padding-bottom: calc(50px + env(safe-area-inset-bottom));
+}
+
+.date-hero {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+  padding: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(145deg, var(--surface), color-mix(in srgb, var(--accent-soft) 85%, var(--surface)));
+  box-shadow: var(--shadow);
+}
+
+.date-hero::after {
+  position: absolute;
+  top: -84px;
+  right: -70px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 24%, transparent), transparent 68%);
+  content: "";
+  pointer-events: none;
+}
+
+.kicker {
+  margin: 0 0 5px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .75rem;
+  font-weight: 500;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.date-hero h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(3.8rem, 18vw, 6.2rem);
+  font-weight: 400;
+  letter-spacing: .035em;
+  line-height: .82;
+}
+
+.date-line {
+  margin: 10px 0 20px;
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: .85rem;
+  letter-spacing: .12em;
+}
+
+.profile-switch {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(10, 11, 16, .58);
+}
+
+.level-label {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .67rem;
+  letter-spacing: .13em;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 52px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--display);
+  padding-inline: 5px;
+  font-size: clamp(.72rem, 2.9vw, .94rem);
+  letter-spacing: .045em;
+}
+
+.profile-button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-2);
+}
+
+.profile-avatar {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--surface-3);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: .64rem;
+}
+
+.mode-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mode-button {
+  min-height: 68px;
+}
+
+.mode-button .choice-label small {
+  overflow: visible;
+  white-space: normal;
+}
+
+.profile-button[aria-pressed="true"] .profile-avatar {
+  background: var(--accent);
+  color: #fff;
+}
+
+.config-card,
+.home-section {
+  margin-top: 16px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.config-card {
+  box-shadow: var(--shadow);
+}
+
+.section-heading,
+.field-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-heading h2,
+.field-heading h3,
+.overlay-heading h2,
+.modal-card h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: .055em;
+}
+
+.section-heading h2 {
+  font-size: 1.75rem;
+}
+
+.section-heading.compact h2 {
+  font-size: 1.55rem;
+}
+
+.focus-badge,
+.count-badge {
+  flex: 0 0 auto;
+  border: 1px solid var(--accent-deep);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .1em;
+}
+
+.focus-badge {
+  padding: 8px 12px;
+}
+
+.count-badge {
+  min-width: 32px;
+  padding: 5px 9px;
+  text-align: center;
+}
+
+.field-group {
+  margin-top: 25px;
+}
+
+.field-heading h3 {
+  font-size: 1.18rem;
+}
+
+.field-heading p {
+  max-width: 380px;
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: .88rem;
+  line-height: 1.45;
+}
+
+.mini-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.mini-actions button {
+  min-height: 44px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .68rem;
+  text-transform: uppercase;
+}
+
+.choice-grid {
+  display: grid;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.material-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.objective-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.choice-button {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 58px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--muted);
+  text-align: left;
+  transition: border-color .18s ease, transform .18s ease, background .18s ease;
+}
+
+.choice-button:active {
+  transform: scale(.98);
+}
+
+.choice-button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.choice-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--surface-3);
+  color: var(--accent-2);
+  font-family: var(--display);
+  font-size: 1rem;
+}
+
+.choice-label {
+  min-width: 0;
+}
+
+.choice-label strong {
+  display: block;
+  overflow: hidden;
+  font-size: .85rem;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.choice-label small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .04em;
+}
+
+.choice-order {
+  position: absolute;
+  top: -6px;
+  right: -5px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: .65rem;
+}
+
+.duration-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 13px;
+}
+
+.duration-button {
+  min-height: 58px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--display);
+  font-size: 1.55rem;
+  letter-spacing: .05em;
+}
+
+.duration-button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.primary-button,
+.secondary-button,
+.danger-button {
+  width: 100%;
+  min-height: 58px;
+  border-radius: 16px;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  letter-spacing: .095em;
+}
+
+.primary-button {
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: #fff;
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.secondary-button {
+  border: 1px solid var(--border-strong);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.danger-button {
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+}
+
+.generate-button {
+  margin-top: 24px;
+}
+
+.form-hint {
+  min-height: 1.2em;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: .8rem;
+  text-align: center;
+}
+
+.card-list,
+.history-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.empty-state {
+  padding: 18px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 15px;
+  color: var(--muted);
+  font-size: .86rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.session-row,
+.history-row {
+  display: flex;
+  width: 100%;
+  min-height: 70px;
+  align-items: center;
+  gap: 13px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: var(--surface-2);
+  text-align: left;
+}
+
+.session-row .row-mark,
+.history-row .row-mark {
+  display: grid;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  font-family: var(--display);
+  font-size: 1.05rem;
+}
+
+.row-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.row-copy strong {
+  display: block;
+  overflow: hidden;
+  color: var(--text);
+  font-size: .9rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-copy span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .04em;
+}
+
+.row-arrow {
+  color: var(--accent-2);
+  font-size: 1.3rem;
+}
+
+.wildcard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.wildcard-card {
+  min-height: 120px;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: var(--surface-2);
+  text-align: left;
+}
+
+.wildcard-card span {
+  display: block;
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .1em;
+}
+
+.wildcard-card strong {
+  display: block;
+  margin-top: 17px;
+  font-family: var(--display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  letter-spacing: .055em;
+  line-height: 1;
+}
+
+.wildcard-card small {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: .72rem;
+  line-height: 1.35;
+}
+
+.app-footer {
+  padding: 34px 0 0;
+  color: var(--quiet);
+  font-family: var(--mono);
+  font-size: .64rem;
+  letter-spacing: .09em;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.overlay,
+.countdown-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.overlay.active,
+.countdown-screen.active {
+  display: block;
+}
+
+.overlay-shell {
+  width: min(100%, 620px);
+  min-height: 100dvh;
+  margin-inline: auto;
+}
+
+.overlay-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  gap: 12px;
+  align-items: center;
+  padding: calc(18px + env(safe-area-inset-top)) 20px 14px;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+.overlay-heading {
+  min-width: 0;
+}
+
+.overlay-heading h2 {
+  overflow: hidden;
+  font-size: 1.5rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-content {
+  padding: 18px 20px calc(34px + env(safe-area-inset-bottom));
+}
+
+.preview-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, var(--surface), var(--accent-soft));
+}
+
+.preview-hero h3 {
+  max-width: 420px;
+  margin: 7px 0 0;
+  font-family: var(--display);
+  font-size: clamp(2rem, 10vw, 3.8rem);
+  font-weight: 400;
+  letter-spacing: .045em;
+  line-height: .92;
+}
+
+.time-stamp {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  min-width: 68px;
+  padding: 9px 10px;
+  border: 1px solid var(--accent-deep);
+  border-radius: 16px;
+  background: rgba(10, 11, 16, .45);
+}
+
+.time-stamp strong {
+  font-family: var(--display);
+  font-size: 2.35rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.time-stamp span {
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: .62rem;
+  letter-spacing: .12em;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 13px;
+}
+
+.tag-row.centered {
+  justify-content: center;
+}
+
+.tag {
+  padding: 7px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.tag.accent {
+  border-color: var(--accent-deep);
+  background: var(--accent-soft);
+  color: var(--accent-2);
+}
+
+.preview-description {
+  margin: 17px 2px;
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.55;
+}
+
+.block-list {
+  display: grid;
+  gap: 12px;
+}
+
+.block-card {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: var(--surface);
+}
+
+.block-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 15px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+
+.block-card-header strong {
+  font-family: var(--display);
+  font-size: 1.08rem;
+  font-weight: 400;
+  letter-spacing: .065em;
+}
+
+.block-card-header span {
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: .65rem;
+  letter-spacing: .08em;
+}
+
+.block-exercises {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.block-exercises li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 48px;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border);
+  font-size: .88rem;
+}
+
+.block-exercises li:last-child {
+  border-bottom: 0;
+}
+
+.block-exercises small {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .66rem;
+  text-align: right;
+}
+
+.preview-actions {
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.countdown-screen {
+  z-index: 100;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle, var(--accent-soft), var(--bg) 65%);
+  text-align: center;
+}
+
+.countdown-screen.active {
+  display: grid;
+}
+
+.countdown-screen p {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .9rem;
+  letter-spacing: .22em;
+}
+
+.countdown-screen strong {
+  color: var(--accent);
+  font-family: var(--display);
+  font-size: clamp(9rem, 48vw, 15rem);
+  font-weight: 400;
+  line-height: .9;
+}
+
+.countdown-screen span {
+  max-width: 82vw;
+  font-family: var(--display);
+  font-size: 2rem;
+  letter-spacing: .05em;
+}
+
+.player-overlay {
+  z-index: 60;
+  overflow: hidden;
+}
+
+.player-shell {
+  display: flex;
+  width: min(100%, 620px);
+  height: 100dvh;
+  min-height: 620px;
+  margin-inline: auto;
+  flex-direction: column;
+  padding: calc(14px + env(safe-area-inset-top)) 18px calc(16px + env(safe-area-inset-bottom));
+}
+
+.player-header {
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  gap: 10px;
+  align-items: center;
+}
+
+.player-title {
+  min-width: 0;
+  text-align: center;
+}
+
+.player-title p {
+  overflow: hidden;
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  letter-spacing: .06em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-title span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .08em;
+}
+
+.progress-track {
+  height: 6px;
+  margin-top: 15px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+
+.progress-track i {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent-2));
+  transition: width .25s linear;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .7rem;
+}
+
+.block-strip {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 11px 0 4px;
+  scrollbar-width: none;
+}
+
+.block-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.block-chip {
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 8px 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .67rem;
+  letter-spacing: .06em;
+}
+
+.block-chip[aria-current="step"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-2);
+}
+
+.block-chip.done {
+  opacity: .48;
+}
+
+.player-stage {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 6px;
+  text-align: center;
+}
+
+.stage-state {
+  padding: 7px 14px;
+  border: 1px solid var(--accent-deep);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: .76rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.player-stage.transition .stage-state {
+  border-color: color-mix(in srgb, var(--rest) 60%, var(--border));
+  background: var(--rest-soft);
+  color: var(--rest);
+}
+
+.player-stage.warm .stage-state {
+  border-color: color-mix(in srgb, var(--warm) 60%, var(--border));
+  background: var(--warm-soft);
+  color: var(--warm);
+}
+
+.timer-ring {
+  position: relative;
+  width: min(48vw, 210px);
+  aspect-ratio: 1;
+  margin: 12px 0 4px;
+}
+
+.timer-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.timer-ring-bg,
+.timer-ring-fill {
+  fill: none;
+  stroke-width: 11;
+}
+
+.timer-ring-bg {
+  stroke: var(--surface-2);
+}
+
+.timer-ring-fill {
+  stroke: var(--accent);
+  stroke-dasharray: 779.1;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  transition: stroke-dashoffset .2s linear, stroke .2s ease;
+}
+
+.player-stage.transition .timer-ring-fill {
+  stroke: var(--rest);
+}
+
+.player-stage.warm .timer-ring-fill {
+  stroke: var(--warm);
+}
+
+.timer-value {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+}
+
+.timer-value strong {
+  font-family: var(--display);
+  font-size: clamp(4.5rem, 21vw, 7rem);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .025em;
+  line-height: .85;
+}
+
+.timer-value span {
+  margin-top: 8px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .16em;
+}
+
+.stage-lead {
+  min-height: 1.25em;
+  margin: 4px 0 0;
+  color: var(--rest);
+  font-family: var(--mono);
+  font-size: .85rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.player-stage h2 {
+  max-width: 100%;
+  margin: 5px 0 0;
+  font-family: var(--display);
+  font-size: clamp(2.5rem, 11vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: .035em;
+  line-height: .92;
+  overflow-wrap: anywhere;
+}
+
+.stage-prescription {
+  min-height: 1.5em;
+  margin: 9px 0 0;
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: clamp(1rem, 4.7vw, 1.3rem);
+  font-weight: 500;
+  letter-spacing: .035em;
+  line-height: 1.35;
+}
+
+.player-stage.transition h2 {
+  color: var(--text);
+  font-size: clamp(3rem, 13vw, 5rem);
+}
+
+.player-stage.transition .stage-prescription {
+  color: var(--rest);
+}
+
+.next-panel {
+  width: min(100%, 440px);
+  min-height: 58px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: var(--surface);
+  text-align: left;
+}
+
+.next-panel span {
+  display: block;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .64rem;
+  letter-spacing: .13em;
+}
+
+.next-panel strong {
+  display: block;
+  overflow: hidden;
+  margin-top: 3px;
+  font-size: .92rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-stage.transition .next-panel {
+  visibility: hidden;
+}
+
+.player-controls {
+  display: grid;
+  grid-template-columns: 66px 1fr 66px;
+  gap: 11px;
+  padding-top: 8px;
+}
+
+.control-button {
+  height: 64px;
+  border: 1px solid var(--border-strong);
+  border-radius: 19px;
+  background: var(--surface-2);
+  font-family: var(--display);
+  font-size: 1.35rem;
+}
+
+.main-control {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: #fff;
+  font-size: 1.7rem;
+}
+
+.player-stage.paused .timer-value strong {
+  opacity: .48;
+}
+
+.summary-overlay {
+  z-index: 70;
+  background:
+    radial-gradient(circle at 50% 24%, color-mix(in srgb, var(--success) 14%, transparent), transparent 26rem),
+    var(--bg);
+}
+
+.summary-shell {
+  display: flex;
+  width: min(100%, 560px);
+  min-height: 100dvh;
+  margin-inline: auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(34px + env(safe-area-inset-top)) 22px calc(30px + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.summary-mark {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 18px;
+  place-items: center;
+  border: 1px solid var(--success);
+  border-radius: 24px;
+  background: var(--success-soft);
+  color: var(--success);
+  font-size: 2.2rem;
+}
+
+.summary-shell h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(3.5rem, 16vw, 6rem);
+  font-weight: 400;
+  letter-spacing: .04em;
+  line-height: .85;
+}
+
+.summary-session-name {
+  margin: 14px 0 0;
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: .84rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.summary-stats {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.summary-stats div {
+  padding: 14px 6px;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  background: var(--surface);
+}
+
+.summary-stats strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.summary-stats span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .56rem;
+  letter-spacing: .08em;
+}
+
+.summary-actions {
+  display: grid;
+  width: 100%;
+  gap: 9px;
+  margin-top: 28px;
+}
+
+.text-button {
+  min-height: 46px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: .72rem;
+  letter-spacing: .1em;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(4, 5, 8, .82);
+  backdrop-filter: blur(8px);
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-card {
+  width: min(100%, 520px);
+  padding: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.modal-card h2 {
+  font-size: 2rem;
+}
+
+.modal-card p:not(.kicker) {
+  margin: 8px 0 20px;
+  color: var(--muted);
+  font-size: .92rem;
+}
+
+.modal-card .primary-button {
+  margin-top: 9px;
+}
+
+.toast {
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  left: 50%;
+  z-index: 150;
+  max-width: calc(100vw - 32px);
+  padding: 11px 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--surface-3);
+  color: var(--text);
+  font-size: .82rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (min-width: 520px) {
+  .material-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .objective-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-height: 700px) {
+  .timer-ring {
+    width: min(39vw, 165px);
+    margin-top: 7px;
+  }
+
+  .player-stage h2 {
+    font-size: clamp(2.15rem, 9vw, 3.5rem);
+  }
+
+  .next-panel {
+    margin-top: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main id="home" class="screen active">
+    <header class="app-header shell">
+      <div>
+        <div class="brand">BRUTAL<span>OS</span><sup>V3.1</sup></div>
+        <p class="brand-sub">Configura · entrena · registra</p>
+      </div>
+      <button class="icon-button" id="soundButton" type="button" aria-label="Desactivar sonido" aria-pressed="true">
+        <span aria-hidden="true">◖))</span>
+      </button>
+    </header>
+
+    <div class="shell home-content">
+      <section class="date-hero" aria-labelledby="todayName">
+        <p class="kicker">HOY</p>
+        <h1 id="todayName">LUNES</h1>
+        <p id="todayDate" class="date-line">12 OCTUBRE 2026</p>
+        <p class="level-label">NIVEL DE ENTRENAMIENTO</p>
+        <div class="profile-switch" role="group" aria-label="Nivel de entrenamiento">
+          <button type="button" class="profile-button" data-level-choice="beginner" aria-pressed="false">
+            <span class="profile-avatar" aria-hidden="true">1</span>
+            BEGINNER
+          </button>
+          <button type="button" class="profile-button" data-level-choice="intermediate" aria-pressed="true">
+            <span class="profile-avatar" aria-hidden="true">2</span>
+            INTERMEDIO
+          </button>
+          <button type="button" class="profile-button" data-level-choice="pro" aria-pressed="false">
+            <span class="profile-avatar" aria-hidden="true">3</span>
+            PRO
+          </button>
+        </div>
+      </section>
+
+      <section class="config-card" aria-labelledby="configureTitle">
+        <div class="section-heading">
+          <div>
+            <p class="kicker">SESIÓN NUEVA</p>
+            <h2 id="configureTitle">CONFIGURA TU ENTRENO</h2>
+          </div>
+          <span class="focus-badge">FULL BODY</span>
+        </div>
+
+        <div class="field-group">
+          <div class="field-heading">
+            <div>
+              <h3>MODALIDAD</h3>
+              <p>Elige variedad continua o circuitos con vueltas.</p>
+            </div>
+          </div>
+          <div class="choice-grid mode-grid" role="group" aria-label="Modalidad del entrenamiento">
+            <button type="button" class="choice-button mode-button" data-mode-choice="varied" aria-pressed="true">
+              <span class="choice-icon" aria-hidden="true">VX</span>
+              <span class="choice-label"><strong>VARIADO</strong><small>Sin repetir ejercicios</small></span>
+            </button>
+            <button type="button" class="choice-button mode-button" data-mode-choice="circuits" aria-pressed="false">
+              <span class="choice-icon" aria-hidden="true">3×</span>
+              <span class="choice-label"><strong>VUELTAS</strong><small>Circuitos de 3 ejercicios</small></span>
+            </button>
+          </div>
+          <p id="modeHint" class="form-hint">Un bloque central con ejercicios distintos.</p>
+        </div>
+
+        <div class="field-group">
+          <div class="field-heading">
+            <div>
+              <h3>MATERIAL DISPONIBLE</h3>
+              <p>Selecciona todo lo que quieras usar hoy.</p>
+            </div>
+            <div class="mini-actions">
+              <button type="button" id="selectAllMaterials">Todo</button>
+              <button type="button" id="clearMaterials">Limpiar</button>
+            </div>
+          </div>
+          <div id="materialGrid" class="choice-grid material-grid" aria-label="Material disponible"></div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-heading">
+            <div>
+              <h3>OBJETIVOS</h3>
+              <p>Elige uno o dos. El primero será el principal.</p>
+            </div>
+            <span id="objectiveCount" class="count-badge">1/2</span>
+          </div>
+          <div id="objectiveGrid" class="choice-grid objective-grid" aria-label="Objetivos del entrenamiento"></div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-heading">
+            <div>
+              <h3>DURACIÓN</h3>
+              <p>Incluye calentamiento, trabajo, transiciones y movilidad final.</p>
+            </div>
+          </div>
+          <div id="durationGrid" class="duration-grid" aria-label="Duración de la sesión"></div>
+        </div>
+
+        <button class="primary-button generate-button" id="generateButton" type="button">
+          <span aria-hidden="true">⚡</span>
+          GENERAR SESIÓN
+        </button>
+        <p id="generatorHint" class="form-hint" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="home-section" id="favoritesSection" aria-labelledby="favoritesTitle">
+        <div class="section-heading compact">
+          <div>
+            <p class="kicker">PARA REPETIR</p>
+            <h2 id="favoritesTitle">FAVORITOS</h2>
+          </div>
+          <span id="favoriteCount" class="count-badge">0</span>
+        </div>
+        <div id="favoritesList" class="card-list"></div>
+      </section>
+
+      <section class="home-section" aria-labelledby="wildcardsTitle">
+        <div class="section-heading compact">
+          <div>
+            <p class="kicker">ACCESO RÁPIDO</p>
+            <h2 id="wildcardsTitle">COMODINES</h2>
+          </div>
+        </div>
+        <div id="wildcardList" class="wildcard-grid"></div>
+      </section>
+
+      <section class="home-section" id="historySection" aria-labelledby="historyTitle">
+        <div class="section-heading compact">
+          <div>
+            <p class="kicker">REGISTRO LOCAL</p>
+            <h2 id="historyTitle">ÚLTIMOS ENTRENOS</h2>
+          </div>
+          <span id="historyCount" class="count-badge">0</span>
+        </div>
+        <div id="historyList" class="history-list"></div>
+      </section>
+
+      <footer class="app-footer">
+        BRUTAL OS · V3.1 · TUS DATOS SE GUARDAN EN ESTE DISPOSITIVO
+      </footer>
+    </div>
+  </main>
+
+  <section id="preview" class="overlay" aria-labelledby="previewTitle" aria-hidden="true">
+    <div class="overlay-shell">
+      <header class="overlay-header">
+        <button class="icon-button" type="button" data-close-preview aria-label="Cerrar previsualización">←</button>
+        <div class="overlay-heading">
+          <p class="kicker">SESIÓN PREPARADA</p>
+          <h2 id="previewTitle">FULL BODY</h2>
+        </div>
+        <button class="icon-button" id="previewFavoriteButton" type="button" aria-label="Guardar en favoritos" aria-pressed="false">☆</button>
+      </header>
+      <div class="preview-content">
+        <section class="preview-hero">
+          <div>
+            <p id="previewProfile" class="kicker">INTERMEDIO · VARIADO · FULL BODY</p>
+            <h3 id="previewName">FUERZA + MOVILIDAD</h3>
+          </div>
+          <div class="time-stamp">
+            <strong id="previewMinutes">30</strong>
+            <span>MIN</span>
+          </div>
+        </section>
+        <div id="previewTags" class="tag-row"></div>
+        <p id="previewDescription" class="preview-description"></p>
+        <div id="previewBlocks" class="block-list"></div>
+        <div class="preview-actions">
+          <button class="secondary-button" type="button" data-close-preview>MODIFICAR</button>
+          <button class="primary-button" id="startSessionButton" type="button">▶ EMPEZAR</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="countdown" class="countdown-screen" aria-hidden="true" aria-live="assertive">
+    <p>PREPÁRATE</p>
+    <strong id="countdownNumber">5</strong>
+    <span id="countdownFirstExercise"></span>
+  </section>
+
+  <section id="player" class="overlay player-overlay" aria-labelledby="playerSessionName" aria-hidden="true">
+    <div class="player-shell">
+      <header class="player-header">
+        <button class="icon-button" id="quitButton" type="button" aria-label="Salir de la sesión">×</button>
+        <div class="player-title">
+          <p id="playerSessionName">FULL BODY</p>
+          <span id="playerBlockPosition">BLOQUE 1/3</span>
+        </div>
+        <button class="icon-button" id="playerSoundButton" type="button" aria-label="Desactivar sonido" aria-pressed="true">◖))</button>
+      </header>
+
+      <div class="progress-track" aria-hidden="true"><i id="playerProgress"></i></div>
+      <div class="progress-meta">
+        <span id="playerElapsed">0:00</span>
+        <span id="playerRemaining">30:00</span>
+      </div>
+      <nav id="blockStrip" class="block-strip" aria-label="Bloques de la sesión"></nav>
+
+      <div id="playerStage" class="player-stage">
+        <div id="stageState" class="stage-state">EJERCICIO</div>
+        <div class="timer-ring" aria-hidden="true">
+          <svg viewBox="0 0 280 280">
+            <circle class="timer-ring-bg" cx="140" cy="140" r="124"></circle>
+            <circle class="timer-ring-fill" id="timerRingFill" cx="140" cy="140" r="124"></circle>
+          </svg>
+          <div class="timer-value">
+            <strong id="timerValue">0:45</strong>
+            <span id="timerCaption">TRABAJO</span>
+          </div>
+        </div>
+        <p id="stageLead" class="stage-lead"></p>
+        <h2 id="stageExercise">GOBLET SQUAT</h2>
+        <p id="stagePrescription" class="stage-prescription">KB20 · 8 REPETICIONES</p>
+        <div id="stageNext" class="next-panel">
+          <span>DESPUÉS</span>
+          <strong id="nextExercise">REMO TRX</strong>
+        </div>
+      </div>
+
+      <div class="player-controls">
+        <button class="control-button" id="previousStepButton" type="button" aria-label="Paso anterior">◀</button>
+        <button class="control-button main-control" id="playPauseButton" type="button" aria-label="Pausar sesión" aria-pressed="true">Ⅱ</button>
+        <button class="control-button" id="nextStepButton" type="button" aria-label="Siguiente paso">▶</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="summary" class="overlay summary-overlay" aria-labelledby="summaryTitle" aria-hidden="true">
+    <div class="summary-shell">
+      <div class="summary-mark" aria-hidden="true">✓</div>
+      <p class="kicker">SESIÓN COMPLETADA</p>
+      <h2 id="summaryTitle">TRABAJO HECHO</h2>
+      <p id="summarySessionName" class="summary-session-name">FULL BODY · FUERZA</p>
+      <div class="summary-stats">
+        <div><strong id="summaryDuration">30</strong><span>MINUTOS</span></div>
+        <div><strong id="summaryBlocks">3</strong><span>BLOQUES</span></div>
+        <div><strong id="summaryExercises">18</strong><span>EJERCICIOS</span></div>
+      </div>
+      <div id="summaryTags" class="tag-row centered"></div>
+      <div class="summary-actions">
+        <button class="secondary-button" id="saveFavoriteButton" type="button" aria-pressed="false">☆ GUARDAR FAVORITO</button>
+        <button class="primary-button" id="shareButton" type="button">↗ COMPARTIR</button>
+        <button class="secondary-button" id="repeatButton" type="button">REPETIR SESIÓN</button>
+        <button class="text-button" id="summaryHomeButton" type="button">VOLVER AL INICIO</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="quitModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="quitTitle" aria-hidden="true">
+    <div class="modal-card">
+      <p class="kicker">SESIÓN EN CURSO</p>
+      <h2 id="quitTitle">¿SALIR DEL ENTRENO?</h2>
+      <p>El progreso de esta sesión no se guardará.</p>
+      <button class="danger-button" id="confirmQuitButton" type="button">SALIR</button>
+      <button class="primary-button" id="continueButton" type="button">SEGUIR ENTRENANDO</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <canvas id="shareCanvas" width="1080" height="1350" hidden></canvas>
+
+  <script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "brutal_os_v3_1_state";
+  var SOUND_KEY = "brutal_os_v3_1_sound";
+  var RING_CIRCUMFERENCE = 779.1;
+  var MONTHS = [
+    "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
+    "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
+  ];
+  var DAYS = [
+    "DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"
+  ];
+
+  var MATERIALS = [
+    { id: "bw", kind: "bw", label: "Peso corporal", short: "BW", icon: "BW", note: "Siempre disponible" },
+    { id: "kb4", kind: "kb", weight: 4, label: "KB 4 kg", short: "KB4", icon: "4", note: "1 unidad" },
+    { id: "kb8", kind: "kb", weight: 8, label: "KB 8 kg", short: "KB8", icon: "8", note: "1 unidad" },
+    { id: "kb16", kind: "kb", weight: 16, label: "KB 16 kg", short: "KB16", icon: "16", note: "1 unidad" },
+    { id: "kb20a", kind: "kb", weight: 20, label: "KB20 · A", short: "KB20 · A", icon: "20", note: "20 kg · independiente" },
+    { id: "kb20b", kind: "kb", weight: 20, label: "KB20 · B", short: "KB20 · B", icon: "20", note: "20 kg · independiente" },
+    { id: "kb28", kind: "kb", weight: 28, label: "KB 28 kg", short: "KB28", icon: "28", note: "1 unidad" },
+    { id: "trx", kind: "trx", label: "TRX", short: "TRX", icon: "TX", note: "Suspensión" },
+    { id: "wheel", kind: "wheel", label: "Rueda abdominal", short: "Rueda", icon: "◎", note: "Core" },
+    { id: "hipband", kind: "hipband", label: "Gomas cadera", short: "Goma cadera", icon: "GC", note: "Banda cerrada" },
+    { id: "footband", kind: "footband", label: "Gomas pies", short: "Gomas pies", icon: "GP", note: "Set ligero" }
+  ];
+
+  var OBJECTIVES = [
+    { id: "strength", label: "Fuerza", icon: "FZ", note: "Control y tensión" },
+    { id: "power", label: "Potencia", icon: "PT", note: "Rápido y explosivo" },
+    { id: "endurance", label: "Resistencia", icon: "RS", note: "Volumen sostenido" },
+    { id: "fat", label: "Fat burner", icon: "FB", note: "Condicionamiento" },
+    { id: "mobility", label: "Movilidad", icon: "MV", note: "Rango y control" },
+    { id: "core", label: "Core", icon: "CR", note: "Estabilidad" }
+  ];
+
+  var DURATIONS = [20, 30, 45, 60];
+
+  var LEVELS = {
+    beginner: { label: "BEGINNER", loadOffset: -1, repMultiplier: .75, workOffset: -10 },
+    intermediate: { label: "INTERMEDIO", loadOffset: 0, repMultiplier: 1, workOffset: 0 },
+    pro: { label: "PRO", loadOffset: 1, repMultiplier: 1.25, workOffset: 5 }
+  };
+
+  var MODES = {
+    varied: {
+      label: "VARIADO",
+      hint: "Un bloque central con ejercicios distintos, sin repetir ninguno."
+    },
+    circuits: {
+      label: "VUELTAS",
+      hint: "Circuitos de 3 ejercicios: uno en 20–30 min y dos en 45–60 min."
+    }
+  };
+
+  var WILDCARDS = [
+    { id: "express", title: "EXPRESS FULL BODY", meta: "20 MIN", description: "Fuerza y ritmo sin perder movilidad.", goals: ["strength", "fat"], duration: 20 },
+    { id: "mobility", title: "MOVILIDAD TOTAL", meta: "20 MIN", description: "Rango, control y respiración.", goals: ["mobility"], duration: 20 },
+    { id: "core", title: "CORE + MOVILIDAD", meta: "20 MIN", description: "Estabilidad, rueda y control.", goals: ["core", "mobility"], duration: 20 },
+    { id: "complete", title: "FULL BODY 30", meta: "30 MIN", description: "Fuerza y resistencia equilibradas.", goals: ["strength", "endurance"], duration: 30 }
+  ];
+
+  var EXERCISES = [
+    { id: "march", name: "Marcha activa", phase: "warmup", goals: ["mobility"], kind: "bw", pattern: "cardio", rx: "RITMO SUAVE" },
+    { id: "catcow", name: "Gato-camello", phase: "warmup", goals: ["mobility"], kind: "bw", pattern: "spine", rx: "CONTROL VERTEBRAL" },
+    { id: "worlds", name: "World’s greatest stretch", phase: "warmup", goals: ["mobility"], kind: "bw", pattern: "mobility", rx: "ALTERNA LADOS" },
+    { id: "hiprot", name: "Rotaciones de cadera", phase: "warmup", goals: ["mobility"], kind: "bw", pattern: "hips", rx: "AMPLIO Y SUAVE" },
+    { id: "thoracic", name: "Rotación torácica", phase: "warmup", goals: ["mobility"], kind: "bw", pattern: "spine", rx: "CAMBIA DE LADO" },
+    { id: "deeppry", name: "Sentadilla profunda + apertura", phase: "warmup", goals: ["mobility"], kind: "bw", pattern: "squat", rx: "MOVILIDAD" },
+    { id: "inchworm", name: "Inchworm", phase: "warmup", goals: ["mobility"], kind: "bw", pattern: "full", rx: "PASOS CORTOS" },
+    { id: "glutewarm", name: "Puente de glúteo", phase: "warmup", goals: ["mobility"], kind: "bw", pattern: "hinge", rx: "PAUSA ARRIBA" },
+    { id: "halowarm", name: "Halo con kettlebell", phase: "warmup", goals: ["mobility"], kind: "kb", weights: [4, 8, 16], tier: 0, pattern: "shoulders", rx: "5 POR LADO" },
+    { id: "bandwalkwarm", name: "Pasos laterales con goma", phase: "warmup", goals: ["mobility"], kind: "hipband", pattern: "hips", rx: "CONTROLADOS" },
+
+    { id: "swing", name: "Swing a dos manos", phase: "main", goals: ["power", "endurance", "fat"], kind: "kb", weights: [8, 16, 20, 28], tier: 2, pattern: "hinge", rx: "12 REPETICIONES" },
+    { id: "deadlift", name: "Kettlebell deadlift", phase: "main", goals: ["strength", "endurance"], kind: "kb", weights: [8, 16, 20, 28], tier: 2, pattern: "hinge", rx: "8 REPETICIONES" },
+    { id: "goblet", name: "Goblet squat", phase: "main", goals: ["strength", "endurance", "fat"], kind: "kb", weights: [8, 16, 20, 28], tier: 1, pattern: "squat", rx: "8 REPETICIONES" },
+    { id: "reverse-lunge", name: "Zancada inversa goblet", phase: "main", goals: ["strength", "endurance"], kind: "kb", weights: [4, 8, 16, 20], tier: 1, pattern: "lunge", rx: "6 POR LADO" },
+    { id: "row", name: "Remo unilateral", phase: "main", goals: ["strength", "endurance"], kind: "kb", weights: [8, 16, 20, 28], tier: 1, pattern: "pull", rx: "8 POR LADO" },
+    { id: "floorpress", name: "Floor press unilateral", phase: "main", goals: ["strength"], kind: "kb", weights: [4, 8, 16, 20], tier: 1, pattern: "push", rx: "8 POR LADO" },
+    { id: "strictpress", name: "Press estricto", phase: "main", goals: ["strength"], kind: "kb", weights: [4, 8, 16, 20], tier: 1, pattern: "push", rx: "6 POR LADO" },
+    { id: "pushpress", name: "Push press unilateral", phase: "main", goals: ["power", "strength"], kind: "kb", weights: [4, 8, 16, 20], tier: 1, pattern: "push", rx: "6 POR LADO" },
+    { id: "clean", name: "Clean unilateral", phase: "main", goals: ["power", "strength"], kind: "kb", weights: [8, 16, 20], tier: 1, pattern: "full", rx: "6 POR LADO" },
+    { id: "suitcase", name: "Suitcase carry", phase: "main", goals: ["strength", "core", "endurance"], kind: "kb", weights: [8, 16, 20, 28], tier: 2, pattern: "carry", rx: "CAMBIA A MITAD" },
+    { id: "halo", name: "Halo", phase: "main", goals: ["mobility", "core"], kind: "kb", weights: [4, 8, 16], tier: 0, pattern: "shoulders", rx: "6 POR LADO" },
+    { id: "tgu-partial", name: "TGU parcial hasta sentado", phase: "main", goals: ["core", "mobility", "strength"], kind: "kb", weights: [4, 8, 16], tier: 0, pattern: "full", rx: "3 POR LADO" },
+    { id: "kb-deadbug", name: "Dead bug con KB", phase: "main", goals: ["core"], kind: "kb", weights: [4, 8, 16], tier: 0, pattern: "core", rx: "8 POR LADO" },
+    { id: "double-deadlift", name: "Doble kettlebell deadlift", phase: "main", goals: ["strength"], kind: "kb", weights: [20], count: 2, tier: 2, pattern: "hinge", rx: "6 REPETICIONES" },
+    { id: "double-squat", name: "Doble front squat", phase: "main", goals: ["strength"], kind: "kb", weights: [20], count: 2, tier: 2, pattern: "squat", rx: "6 REPETICIONES" },
+    { id: "double-row", name: "Doble remo inclinado", phase: "main", goals: ["strength"], kind: "kb", weights: [20], count: 2, tier: 2, pattern: "pull", rx: "8 REPETICIONES" },
+
+    { id: "pushup", name: "Flexiones", phase: "main", goals: ["strength", "endurance", "fat"], kind: "bw", pattern: "push", rx: "8–15 REPETICIONES" },
+    { id: "airsquat", name: "Sentadilla controlada", phase: "main", goals: ["strength", "endurance"], kind: "bw", pattern: "squat", rx: "12 REPETICIONES" },
+    { id: "jumposquat", name: "Sentadilla con salto", phase: "main", goals: ["power", "fat"], kind: "bw", pattern: "squat", rx: "8 REPETICIONES" },
+    { id: "burpee", name: "Burpees", phase: "main", goals: ["fat", "endurance"], kind: "bw", pattern: "full", rx: "RITMO CONSTANTE" },
+    { id: "climber", name: "Escaladores", phase: "main", goals: ["fat", "endurance", "core"], kind: "bw", pattern: "core", rx: "RITMO ALTO" },
+    { id: "bearcrawl", name: "Bear crawl", phase: "main", goals: ["core", "endurance", "fat"], kind: "bw", pattern: "full", rx: "IDA Y VUELTA" },
+    { id: "plank", name: "Plancha hardstyle", phase: "main", goals: ["core", "strength"], kind: "bw", pattern: "core", rx: "TENSIÓN TOTAL" },
+    { id: "sideplank", name: "Plancha lateral", phase: "main", goals: ["core"], kind: "bw", pattern: "core", rx: "CAMBIA A MITAD" },
+    { id: "hollow", name: "Hollow hold", phase: "main", goals: ["core"], kind: "bw", pattern: "core", rx: "LUMBAR AL SUELO" },
+    { id: "deadbug", name: "Dead bug", phase: "main", goals: ["core", "mobility"], kind: "bw", pattern: "core", rx: "8 POR LADO" },
+    { id: "bird-dog", name: "Bird dog", phase: "main", goals: ["core", "mobility"], kind: "bw", pattern: "core", rx: "6 POR LADO" },
+    { id: "cossack", name: "Cossack squat", phase: "main", goals: ["mobility", "strength"], kind: "bw", pattern: "squat", rx: "5 POR LADO" },
+    { id: "shinbox", name: "Shin box", phase: "main", goals: ["mobility"], kind: "bw", pattern: "hips", rx: "TRANSICIONES LENTAS" },
+    { id: "thoracic-main", name: "Rotación torácica en suelo", phase: "main", goals: ["mobility"], kind: "bw", pattern: "spine", rx: "6 POR LADO" },
+    { id: "lunge-stretch", name: "Zancada + rotación", phase: "main", goals: ["mobility"], kind: "bw", pattern: "hips", rx: "CAMBIA A MITAD" },
+    { id: "squat-flow", name: "Flujo de sentadilla profunda", phase: "main", goals: ["mobility"], kind: "bw", pattern: "squat", rx: "RESPIRA" },
+
+    { id: "trx-row", name: "Remo TRX", phase: "main", goals: ["strength", "endurance"], kind: "trx", pattern: "pull", rx: "10 REPETICIONES" },
+    { id: "trx-press", name: "Press de pecho TRX", phase: "main", goals: ["strength", "endurance"], kind: "trx", pattern: "push", rx: "10 REPETICIONES" },
+    { id: "trx-facepull", name: "Face pull TRX", phase: "main", goals: ["strength", "mobility"], kind: "trx", pattern: "pull", rx: "12 REPETICIONES" },
+    { id: "trx-squat", name: "Sentadilla TRX", phase: "main", goals: ["endurance", "mobility"], kind: "trx", pattern: "squat", rx: "12 REPETICIONES" },
+    { id: "trx-hamcurl", name: "Curl femoral TRX", phase: "main", goals: ["strength", "core"], kind: "trx", pattern: "hinge", rx: "10 REPETICIONES" },
+    { id: "trx-pike", name: "Pike TRX", phase: "main", goals: ["core"], kind: "trx", pattern: "core", rx: "8 REPETICIONES" },
+    { id: "trx-fallout", name: "Fallout TRX", phase: "main", goals: ["core", "strength"], kind: "trx", pattern: "core", rx: "8 REPETICIONES" },
+
+    { id: "wheel-rollout", name: "Rueda abdominal", phase: "main", goals: ["core", "strength"], kind: "wheel", pattern: "core", rx: "6–10 REPETICIONES" },
+    { id: "wheel-hold", name: "Plancha sobre rueda", phase: "main", goals: ["core"], kind: "wheel", pattern: "core", rx: "POSICIÓN FIRME" },
+
+    { id: "monsterwalk", name: "Monster walk", phase: "main", goals: ["strength", "endurance", "mobility"], kind: "hipband", pattern: "hips", rx: "10 PASOS POR LADO" },
+    { id: "lateralwalk", name: "Pasos laterales con goma", phase: "main", goals: ["endurance", "fat", "mobility"], kind: "hipband", pattern: "hips", rx: "12 PASOS POR LADO" },
+    { id: "clamshell", name: "Clam shell con goma", phase: "main", goals: ["strength", "mobility"], kind: "hipband", pattern: "hips", rx: "12 POR LADO" },
+    { id: "bandbridge", name: "Puente de glúteo con goma", phase: "main", goals: ["strength", "endurance"], kind: "hipband", pattern: "hinge", rx: "15 REPETICIONES" },
+
+    { id: "foot-march", name: "Marcha resistida con gomas", phase: "main", goals: ["endurance", "fat"], kind: "footband", pattern: "hips", rx: "PASOS CONTROLADOS" },
+    { id: "foot-abduction", name: "Abducción con gomas de pies", phase: "main", goals: ["strength", "mobility"], kind: "footband", pattern: "hips", rx: "10 POR LADO" },
+    { id: "foot-kickback", name: "Extensión de cadera con goma", phase: "main", goals: ["strength", "endurance"], kind: "footband", pattern: "hinge", rx: "10 POR LADO" },
+
+    { id: "breathing", name: "Respiración 90/90", phase: "cooldown", goals: ["mobility"], kind: "bw", pattern: "breath", rx: "EXHALACIÓN LARGA" },
+    { id: "hipflexor", name: "Apertura de flexor de cadera", phase: "cooldown", goals: ["mobility"], kind: "bw", pattern: "hips", rx: "CAMBIA A MITAD" },
+    { id: "posterior", name: "Cadena posterior", phase: "cooldown", goals: ["mobility"], kind: "bw", pattern: "hinge", rx: "SIN REBOTES" },
+    { id: "childpose", name: "Child’s pose + dorsales", phase: "cooldown", goals: ["mobility"], kind: "bw", pattern: "spine", rx: "RESPIRA" },
+    { id: "pecstretch", name: "Apertura de pectoral", phase: "cooldown", goals: ["mobility"], kind: "bw", pattern: "shoulders", rx: "CAMBIA A MITAD" },
+    { id: "ankles", name: "Movilidad de tobillo", phase: "cooldown", goals: ["mobility"], kind: "bw", pattern: "ankles", rx: "RODILLA AL FRENTE" }
+  ];
+
+  var BLOCK_SETTINGS = {
+    strength: { label: "FUERZA", work: 45, description: "Repeticiones limpias y controladas." },
+    power: { label: "POTENCIA", work: 35, description: "Velocidad, intención y técnica." },
+    endurance: { label: "RESISTENCIA", work: 45, description: "Ritmo sostenible y volumen." },
+    fat: { label: "CONDICIONAMIENTO", work: 40, description: "Trabajo continuo de cuerpo completo." },
+    mobility: { label: "MOVILIDAD", work: 50, description: "Rango, control y respiración." },
+    core: { label: "CORE", work: 40, description: "Estabilidad y tensión del tronco." }
+  };
+
+  var $ = function (id) { return document.getElementById(id); };
+  var DEFAULT_MATERIALS = MATERIALS.map(function (item) { return item.id; });
+  var state = loadState();
+  var soundOn = loadSound();
+  var currentSession = null;
+  var currentSummary = null;
+  var steps = [];
+  var currentStepIndex = 0;
+  var stepRemaining = 0;
+  var running = false;
+  var tickHandle = null;
+  var stepEndAt = 0;
+  var startedAt = 0;
+  var pausedTotal = 0;
+  var pauseStartedAt = 0;
+  var lastBeepSecond = -1;
+  var wakeLock = null;
+  var modalWasRunning = false;
+  var toastHandle = null;
+  var audioContext = null;
+
+  function freshProfile(defaultObjectives) {
+    return {
+      materials: DEFAULT_MATERIALS.slice(),
+      objectives: defaultObjectives.slice(),
+      duration: 30,
+      mode: "varied",
+      history: [],
+      favorites: []
+    };
+  }
+
+  function defaultState() {
+    return {
+      version: 31,
+      activeProfile: "intermediate",
+      profiles: {
+        beginner: freshProfile(["strength", "mobility"]),
+        intermediate: freshProfile(["strength", "mobility"]),
+        pro: freshProfile(["strength", "mobility"])
+      }
+    };
+  }
+
+  function loadState() {
+    var fallback = defaultState();
+    try {
+      var parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!parsed || parsed.version !== 31 || !parsed.profiles) return fallback;
+      Object.keys(LEVELS).forEach(function (profileId) {
+        if (!parsed.profiles[profileId]) parsed.profiles[profileId] = freshProfile(["strength", "mobility"]);
+        var profile = parsed.profiles[profileId];
+        if (!Array.isArray(profile.materials)) profile.materials = DEFAULT_MATERIALS.slice();
+        if (!Array.isArray(profile.objectives) || !profile.objectives.length) profile.objectives = ["strength"];
+        if (!DURATIONS.includes(profile.duration)) profile.duration = 30;
+        if (!MODES[profile.mode]) profile.mode = "varied";
+        if (!Array.isArray(profile.history)) profile.history = [];
+        if (!Array.isArray(profile.favorites)) profile.favorites = [];
+      });
+      if (!LEVELS[parsed.activeProfile]) parsed.activeProfile = "intermediate";
+      return parsed;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (error) {
+      showToast("No se pudo guardar en este dispositivo.");
+    }
+  }
+
+  function loadSound() {
+    try {
+      return localStorage.getItem(SOUND_KEY) !== "0";
+    } catch (error) {
+      return true;
+    }
+  }
+
+  function saveSound() {
+    try {
+      localStorage.setItem(SOUND_KEY, soundOn ? "1" : "0");
+    } catch (error) {}
+  }
+
+  function activeProfile() {
+    return state.profiles[state.activeProfile];
+  }
+
+  function profileLabel() {
+    return LEVELS[state.activeProfile].label;
+  }
+
+  function uid(prefix) {
+    return prefix + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+  }
+
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function labelForObjective(id) {
+    var item = OBJECTIVES.find(function (objective) { return objective.id === id; });
+    return item ? item.label : id;
+  }
+
+  function formatClock(totalSeconds) {
+    var seconds = Math.max(0, Math.round(totalSeconds));
+    var minutes = Math.floor(seconds / 60);
+    var rest = String(seconds % 60).padStart(2, "0");
+    return minutes + ":" + rest;
+  }
+
+  function shuffle(list) {
+    var copy = list.slice();
+    for (var index = copy.length - 1; index > 0; index -= 1) {
+      var randomIndex = Math.floor(Math.random() * (index + 1));
+      var temp = copy[index];
+      copy[index] = copy[randomIndex];
+      copy[randomIndex] = temp;
+    }
+    return copy;
+  }
+
+  function escapeText(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function setDate() {
+    var now = new Date();
+    $("todayName").textContent = DAYS[now.getDay()];
+    $("todayDate").textContent = now.getDate() + " " + MONTHS[now.getMonth()] + " " + now.getFullYear();
+  }
+
+  function setLevel(profileId) {
+    if (!state.profiles[profileId]) return;
+    state.activeProfile = profileId;
+    document.documentElement.dataset.level = profileId;
+    saveState();
+    renderHome();
+    showToast("Nivel " + profileLabel() + " activo");
+  }
+
+  function renderLevelSwitch() {
+    document.querySelectorAll("[data-level-choice]").forEach(function (button) {
+      button.setAttribute("aria-pressed", String(button.dataset.levelChoice === state.activeProfile));
+    });
+    document.documentElement.dataset.level = state.activeProfile;
+  }
+
+  function modeLabel(modeId) {
+    return MODES[modeId] ? MODES[modeId].label : MODES.varied.label;
+  }
+
+  function setMode(modeId) {
+    if (!MODES[modeId]) return;
+    activeProfile().mode = modeId;
+    saveState();
+    renderModes();
+    showToast("Modalidad " + modeLabel(modeId) + " activa");
+  }
+
+  function renderModes() {
+    var selected = activeProfile().mode;
+    document.querySelectorAll("[data-mode-choice]").forEach(function (button) {
+      button.setAttribute("aria-pressed", String(button.dataset.modeChoice === selected));
+    });
+    $("modeHint").textContent = MODES[selected].hint;
+  }
+
+  function renderMaterials() {
+    var selected = activeProfile().materials;
+    $("materialGrid").innerHTML = MATERIALS.map(function (item) {
+      var on = selected.includes(item.id);
+      var disabled = item.id === "bw";
+      return (
+        '<button type="button" class="choice-button" data-material="' + item.id + '"' +
+        ' aria-pressed="' + String(on) + '"' + (disabled ? ' aria-disabled="true"' : "") + ">" +
+          '<span class="choice-icon" aria-hidden="true">' + escapeText(item.icon) + "</span>" +
+          '<span class="choice-label"><strong>' + escapeText(item.label) + "</strong>" +
+          "<small>" + escapeText(item.note) + "</small></span>" +
+        "</button>"
+      );
+    }).join("");
+
+    document.querySelectorAll("[data-material]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        toggleMaterial(button.dataset.material);
+      });
+    });
+  }
+
+  function toggleMaterial(materialId) {
+    if (materialId === "bw") {
+      showToast("El peso corporal siempre está disponible.");
+      return;
+    }
+    var profile = activeProfile();
+    if (profile.materials.includes(materialId)) {
+      profile.materials = profile.materials.filter(function (id) { return id !== materialId; });
+    } else {
+      profile.materials.push(materialId);
+    }
+    if (!profile.materials.includes("bw")) profile.materials.unshift("bw");
+    saveState();
+    renderMaterials();
+  }
+
+  function renderObjectives() {
+    var selected = activeProfile().objectives;
+    $("objectiveGrid").innerHTML = OBJECTIVES.map(function (item) {
+      var order = selected.indexOf(item.id);
+      var on = order >= 0;
+      return (
+        '<button type="button" class="choice-button" data-objective="' + item.id + '" aria-pressed="' + String(on) + '">' +
+          '<span class="choice-icon" aria-hidden="true">' + escapeText(item.icon) + "</span>" +
+          '<span class="choice-label"><strong>' + escapeText(item.label) + "</strong>" +
+          "<small>" + escapeText(item.note) + "</small></span>" +
+          (on ? '<span class="choice-order" aria-label="Prioridad ' + (order + 1) + '">' + (order + 1) + "</span>" : "") +
+        "</button>"
+      );
+    }).join("");
+    $("objectiveCount").textContent = selected.length + "/2";
+
+    document.querySelectorAll("[data-objective]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        toggleObjective(button.dataset.objective);
+      });
+    });
+  }
+
+  function toggleObjective(objectiveId) {
+    var profile = activeProfile();
+    var position = profile.objectives.indexOf(objectiveId);
+    if (position >= 0) {
+      if (profile.objectives.length === 1) {
+        showToast("La sesión necesita al menos un objetivo.");
+        return;
+      }
+      profile.objectives.splice(position, 1);
+    } else {
+      if (profile.objectives.length >= 2) {
+        showToast("Puedes combinar un máximo de dos objetivos.");
+        return;
+      }
+      profile.objectives.push(objectiveId);
+    }
+    saveState();
+    renderObjectives();
+  }
+
+  function renderDurations() {
+    var selected = activeProfile().duration;
+    $("durationGrid").innerHTML = DURATIONS.map(function (minutes) {
+      return (
+        '<button type="button" class="duration-button" data-duration="' + minutes +
+        '" aria-pressed="' + String(selected === minutes) + '">' + minutes + "′</button>"
+      );
+    }).join("");
+
+    document.querySelectorAll("[data-duration]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        activeProfile().duration = Number(button.dataset.duration);
+        saveState();
+        renderDurations();
+      });
+    });
+  }
+
+  function renderWildcards() {
+    $("wildcardList").innerHTML = WILDCARDS.map(function (preset) {
+      return (
+        '<button type="button" class="wildcard-card" data-wildcard="' + preset.id + '">' +
+          "<span>" + escapeText(preset.meta) + "</span>" +
+          "<strong>" + escapeText(preset.title) + "</strong>" +
+          "<small>" + escapeText(preset.description) + "</small>" +
+        "</button>"
+      );
+    }).join("");
+    document.querySelectorAll("[data-wildcard]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var preset = WILDCARDS.find(function (item) { return item.id === button.dataset.wildcard; });
+        if (!preset) return;
+        activeProfile().objectives = preset.goals.slice();
+        activeProfile().duration = preset.duration;
+        saveState();
+        renderObjectives();
+        renderDurations();
+        generateSession(preset.title);
+      });
+    });
+  }
+
+  function renderFavorites() {
+    var favorites = activeProfile().favorites;
+    $("favoriteCount").textContent = String(favorites.length);
+    if (!favorites.length) {
+      $("favoritesList").innerHTML = '<div class="empty-state">Guarda una sesión terminada y aparecerá aquí para repetirla.</div>';
+      return;
+    }
+    $("favoritesList").innerHTML = favorites.slice().reverse().map(function (session) {
+      return (
+        '<button type="button" class="session-row" data-favorite-id="' + session.id + '">' +
+          '<span class="row-mark" aria-hidden="true">★</span>' +
+          '<span class="row-copy"><strong>' + escapeText(session.name) + "</strong>" +
+          "<span>" + session.duration + " MIN · " + escapeText(session.goals.map(labelForObjective).join(" + ")) + "</span></span>" +
+          '<span class="row-arrow" aria-hidden="true">›</span>' +
+        "</button>"
+      );
+    }).join("");
+    document.querySelectorAll("[data-favorite-id]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var session = activeProfile().favorites.find(function (item) { return item.id === button.dataset.favoriteId; });
+        if (!session) return;
+        currentSession = clone(session);
+        currentSession.fromFavorite = true;
+        renderPreview();
+        openOverlay("preview");
+      });
+    });
+  }
+
+  function renderHistory() {
+    var history = activeProfile().history;
+    $("historyCount").textContent = String(history.length);
+    if (!history.length) {
+      $("historyList").innerHTML = '<div class="empty-state">Tu primer entrenamiento completado quedará registrado aquí.</div>';
+      return;
+    }
+    $("historyList").innerHTML = history.slice(0, 8).map(function (entry) {
+      return (
+        '<div class="history-row">' +
+          '<span class="row-mark" aria-hidden="true">✓</span>' +
+          '<span class="row-copy"><strong>' + escapeText(entry.name) + "</strong>" +
+          "<span>" + escapeText(entry.dateLabel) + " · " + entry.actualMinutes + " MIN</span></span>" +
+          '<span class="tag accent">' + escapeText(entry.goals.map(labelForObjective).join(" + ")) + "</span>" +
+        "</div>"
+      );
+    }).join("");
+  }
+
+  function renderHome() {
+    renderLevelSwitch();
+    renderModes();
+    renderMaterials();
+    renderObjectives();
+    renderDurations();
+    renderFavorites();
+    renderWildcards();
+    renderHistory();
+    updateSoundButtons();
+  }
+
+  function selectedKettlebells(materialIds, weights) {
+    return MATERIALS.filter(function (material) {
+      return material.kind === "kb" && materialIds.includes(material.id) && weights.includes(material.weight);
+    }).sort(function (a, b) { return a.weight - b.weight; });
+  }
+
+  function canUseExercise(exercise, materialIds) {
+    if (exercise.kind === "bw") return materialIds.includes("bw");
+    if (exercise.kind === "kb") {
+      var kettlebells = selectedKettlebells(materialIds, exercise.weights || []);
+      if ((exercise.count || 1) === 1) return kettlebells.length > 0;
+      var grouped = {};
+      kettlebells.forEach(function (kb) {
+        grouped[kb.weight] = (grouped[kb.weight] || 0) + 1;
+      });
+      return Object.keys(grouped).some(function (weight) { return grouped[weight] >= exercise.count; });
+    }
+    return materialIds.some(function (id) {
+      var material = MATERIALS.find(function (item) { return item.id === id; });
+      return material && material.kind === exercise.kind;
+    });
+  }
+
+  function chooseKettlebell(exercise, materialIds) {
+    var kettlebells = selectedKettlebells(materialIds, exercise.weights || []);
+    if ((exercise.count || 1) === 2) {
+      var equalWeights = [];
+      kettlebells.forEach(function (kb) {
+        if (kettlebells.filter(function (other) { return other.weight === kb.weight; }).length >= 2 &&
+            !equalWeights.includes(kb.weight)) {
+          equalWeights.push(kb.weight);
+        }
+      });
+      equalWeights.sort(function (a, b) { return a - b; });
+      if (!equalWeights.length) return null;
+      var doubleIndex = state.activeProfile === "beginner" ? 0 :
+        state.activeProfile === "pro" ? equalWeights.length - 1 : Math.floor((equalWeights.length - 1) / 2);
+      var doubleWeight = equalWeights[doubleIndex];
+      return "2×KB" + doubleWeight;
+    }
+    if (!kettlebells.length) return null;
+    var uniqueWeights = kettlebells.map(function (kb) { return kb.weight; }).filter(function (weight, index, list) {
+      return list.indexOf(weight) === index;
+    });
+    var tier = exercise.tier || 0;
+    var index;
+    if (tier === 0) index = 0;
+    else if (tier === 1) index = Math.floor((uniqueWeights.length - 1) / 2);
+    else index = uniqueWeights.length - 1;
+    index = Math.max(0, Math.min(uniqueWeights.length - 1, index + LEVELS[state.activeProfile].loadOffset));
+    return "KB" + uniqueWeights[index];
+  }
+
+  function scaledCount(value) {
+    var multiplier = LEVELS[state.activeProfile].repMultiplier;
+    if (multiplier === 1) return value;
+    return Math.max(2, Math.round(value * multiplier));
+  }
+
+  function adjustPrescription(prescription) {
+    if (LEVELS[state.activeProfile].repMultiplier === 1) return prescription;
+    return prescription.replace(/\d+(?:[–-]\d+)?/g, function (token) {
+      var parts = token.split(/[–-]/).map(Number);
+      if (parts.length === 1) return String(scaledCount(parts[0]));
+      return scaledCount(parts[0]) + "–" + scaledCount(parts[1]);
+    });
+  }
+
+  function workSecondsForLevel(baseSeconds) {
+    return Math.max(25, Math.min(55, baseSeconds + LEVELS[state.activeProfile].workOffset));
+  }
+
+  function materialLabelForExercise(exercise, materialIds) {
+    if (exercise.kind === "kb") return chooseKettlebell(exercise, materialIds);
+    if (exercise.kind === "bw") return "PESO CORPORAL";
+    var material = MATERIALS.find(function (item) {
+      return materialIds.includes(item.id) && item.kind === exercise.kind;
+    });
+    return material ? material.short.toUpperCase() : "";
+  }
+
+  function prepareExercise(exercise, materialIds) {
+    var copy = clone(exercise);
+    copy.load = materialLabelForExercise(exercise, materialIds);
+    copy.rx = adjustPrescription(copy.rx);
+    copy.prescription = [copy.load, copy.rx].filter(Boolean).join(" · ");
+    return copy;
+  }
+
+  function poolFor(phase, goal, materialIds) {
+    return EXERCISES.filter(function (exercise) {
+      return exercise.phase === phase &&
+        (phase !== "main" || exercise.goals.includes(goal)) &&
+        canUseExercise(exercise, materialIds);
+    });
+  }
+
+  function pickExercises(pool, count, materialIds) {
+    if (!pool.length) {
+      pool = EXERCISES.filter(function (exercise) {
+        return exercise.phase === "main" && exercise.kind === "bw";
+      });
+    }
+    var sequence = [];
+    var previousPattern = null;
+    var deck = [];
+    while (sequence.length < count) {
+      if (!deck.length) deck = shuffle(pool);
+      var candidateIndex = deck.findIndex(function (item) { return item.pattern !== previousPattern; });
+      if (candidateIndex < 0) candidateIndex = 0;
+      var candidate = deck.splice(candidateIndex, 1)[0];
+      sequence.push(prepareExercise(candidate, materialIds));
+      previousPattern = candidate.pattern;
+    }
+    return sequence;
+  }
+
+  function combinedMainPool(goals, materialIds, excludedIds) {
+    var excluded = excludedIds || new Set();
+    var available = EXERCISES.filter(function (exercise) {
+      return exercise.phase === "main" && canUseExercise(exercise, materialIds) && !excluded.has(exercise.id);
+    });
+    var preferred = available.filter(function (exercise) {
+      return goals.some(function (goal) { return exercise.goals.includes(goal); });
+    });
+    var fallback = available.filter(function (exercise) { return !preferred.includes(exercise); });
+    return shuffle(preferred).concat(shuffle(fallback));
+  }
+
+  function pickUniqueExercises(pool, count, materialIds) {
+    var deck = pool.slice();
+    var sequence = [];
+    var previousPattern = null;
+    while (sequence.length < count && deck.length) {
+      var candidateIndex = deck.findIndex(function (item) { return item.pattern !== previousPattern; });
+      if (candidateIndex < 0) candidateIndex = 0;
+      var candidate = deck.splice(candidateIndex, 1)[0];
+      sequence.push(prepareExercise(candidate, materialIds));
+      previousPattern = candidate.pattern;
+    }
+    return sequence;
+  }
+
+  function sessionMinuteSplit(duration) {
+    if (duration === 20) return { warm: 3, cool: 2 };
+    if (duration === 30) return { warm: 4, cool: 3 };
+    if (duration === 45) return { warm: 5, cool: 4 };
+    return { warm: 6, cool: 5 };
+  }
+
+  function makeBlock(id, label, goal, phase, minutes, workSeconds, materialIds, description) {
+    var pool = poolFor(phase, goal, materialIds);
+    return {
+      id: id,
+      label: label,
+      goal: goal,
+      phase: phase,
+      minutes: minutes,
+      work: workSeconds,
+      description: description,
+      format: "standard",
+      exercises: pickExercises(pool, minutes, materialIds)
+    };
+  }
+
+  function makeVariedBlock(minutes, goals, materialIds) {
+    var pool = combinedMainPool(goals, materialIds);
+    return {
+      id: "varied",
+      label: "VARIADO · SIN REPETICIONES",
+      goal: goals[0],
+      phase: "main",
+      format: "varied",
+      adaptiveWork: true,
+      minutes: minutes,
+      description: "Un bloque central con ejercicios diferentes de principio a fin.",
+      exercises: pickUniqueExercises(pool, Math.min(minutes, pool.length), materialIds)
+    };
+  }
+
+  function circuitPlan(duration) {
+    if (duration <= 20) return { count: 1, rounds: 3 };
+    if (duration <= 30) return { count: 1, rounds: 4 };
+    if (duration <= 45) return { count: 2, rounds: 4 };
+    return { count: 2, rounds: 5 };
+  }
+
+  function makeCircuitBlock(index, minutes, rounds, goal, materialIds, usedIds) {
+    var pool = combinedMainPool([goal], materialIds, usedIds);
+    var exercises = pickUniqueExercises(pool, 3, materialIds);
+    exercises.forEach(function (exercise) { usedIds.add(exercise.id); });
+    return {
+      id: "circuit-" + index,
+      label: "CIRCUITO " + (index === 1 ? "A" : "B") + " · 3 EJERCICIOS",
+      goal: goal,
+      phase: "main",
+      format: "circuit",
+      adaptiveWork: true,
+      minutes: minutes,
+      rounds: rounds,
+      description: "Completa los tres ejercicios y repite la vuelta " + rounds + " veces.",
+      exercises: exercises
+    };
+  }
+
+  function adaptiveWorkRatio() {
+    if (state.activeProfile === "beginner") return .62;
+    if (state.activeProfile === "pro") return .8;
+    return .72;
+  }
+
+  function compileSteps(session) {
+    var slots = [];
+    session.blocks.forEach(function (block, blockIndex) {
+      var sequence = [];
+      if (block.format === "circuit") {
+        for (var round = 1; round <= block.rounds; round += 1) {
+          block.exercises.forEach(function (exercise) {
+            sequence.push({ exercise: exercise, round: round, rounds: block.rounds });
+          });
+        }
+      } else {
+        block.exercises.forEach(function (exercise) { sequence.push({ exercise: exercise }); });
+      }
+      var totalSeconds = block.minutes * 60;
+      var baseInterval = Math.floor(totalSeconds / sequence.length);
+      var remainder = totalSeconds % sequence.length;
+      sequence.forEach(function (item, sequenceIndex) {
+        slots.push({
+          block: block,
+          blockIndex: blockIndex,
+          exercise: item.exercise,
+          round: item.round,
+          rounds: item.rounds,
+          interval: baseInterval + (sequenceIndex < remainder ? 1 : 0)
+        });
+      });
+    });
+    var compiled = [];
+    slots.forEach(function (slot, index) {
+      var isLast = index === slots.length - 1;
+      var targetWork = slot.block.adaptiveWork
+        ? Math.round(slot.interval * adaptiveWorkRatio())
+        : slot.block.work;
+      var workDuration = isLast
+        ? slot.interval
+        : Math.max(20, Math.min(slot.interval - 5, targetWork));
+      compiled.push({
+        type: "work",
+        duration: workDuration,
+        blockIndex: slot.blockIndex,
+        blockLabel: slot.block.label,
+        phase: slot.block.phase,
+        format: slot.block.format,
+        round: slot.round,
+        rounds: slot.rounds,
+        name: slot.exercise.name,
+        prescription: slot.exercise.prescription
+      });
+      if (!isLast) {
+        var nextSlot = slots[index + 1];
+        compiled.push({
+          type: "transition",
+          duration: slot.interval - workDuration,
+          blockIndex: slot.blockIndex,
+          blockLabel: slot.block.label,
+          phase: "transition",
+          name: "Transición",
+          prescription: "",
+          nextName: nextSlot.exercise.name,
+          nextPrescription: nextSlot.exercise.prescription,
+          nextBlockIndex: nextSlot.blockIndex
+        });
+      }
+    });
+    return compiled;
+  }
+
+  function generateSession(nameOverride) {
+    var profile = activeProfile();
+    var split = sessionMinuteSplit(profile.duration);
+    var mainMinutes = profile.duration - split.warm - split.cool;
+    var blocks = [];
+    var primary = profile.objectives[0];
+    var secondary = profile.objectives[1];
+
+    blocks.push(makeBlock(
+      "warmup",
+      "MOVILIDAD + ACTIVACIÓN",
+      "mobility",
+      "warmup",
+      split.warm,
+      45,
+      profile.materials,
+      "Preparación dinámica para todo el cuerpo."
+    ));
+
+    if (profile.mode === "circuits") {
+      var plan = circuitPlan(profile.duration);
+      var usedIds = new Set();
+      if (plan.count === 1) {
+        blocks.push(makeCircuitBlock(1, mainMinutes, plan.rounds, primary, profile.materials, usedIds));
+      } else {
+        var firstMinutes = Math.ceil(mainMinutes / 2);
+        blocks.push(makeCircuitBlock(1, firstMinutes, plan.rounds, primary, profile.materials, usedIds));
+        blocks.push(makeCircuitBlock(2, mainMinutes - firstMinutes, plan.rounds, secondary || primary, profile.materials, usedIds));
+      }
+    } else {
+      blocks.push(makeVariedBlock(mainMinutes, profile.objectives, profile.materials));
+    }
+
+    blocks.push(makeBlock(
+      "cooldown",
+      "MOVILIDAD FINAL",
+      "mobility",
+      "cooldown",
+      split.cool,
+      50,
+      profile.materials,
+      "Baja pulsaciones y recupera rango."
+    ));
+
+    var sessionName = nameOverride || profile.objectives.map(labelForObjective).join(" + ").toUpperCase();
+    currentSession = {
+      id: uid("session"),
+      profile: state.activeProfile,
+      level: state.activeProfile,
+      mode: profile.mode,
+      name: sessionName,
+      focus: "FULL BODY",
+      goals: profile.objectives.slice(),
+      duration: profile.duration,
+      materials: profile.materials.slice(),
+      createdAt: new Date().toISOString(),
+      description: profile.mode === "circuits"
+        ? "Sesión por vueltas de 3 ejercicios, ajustada al nivel " + profileLabel().toLowerCase() + "."
+        : "Sesión variada con un bloque central sin ejercicios repetidos, ajustada al nivel " + profileLabel().toLowerCase() + ".",
+      blocks: blocks
+    };
+    currentSession.steps = compileSteps(currentSession);
+    $("generatorHint").textContent = "";
+    renderPreview();
+    openOverlay("preview");
+  }
+
+  function aggregateExercises(block) {
+    var map = {};
+    var order = [];
+    block.exercises.forEach(function (exercise) {
+      var key = exercise.name + "|" + exercise.prescription;
+      if (!map[key]) {
+        map[key] = { name: exercise.name, prescription: exercise.prescription, count: 0 };
+        order.push(key);
+      }
+      map[key].count += 1;
+    });
+    return order.map(function (key) { return map[key]; });
+  }
+
+  function isFavorite(sessionId) {
+    return activeProfile().favorites.some(function (session) { return session.id === sessionId; });
+  }
+
+  function updateFavoriteButtons() {
+    var favorite = currentSession ? isFavorite(currentSession.id) : false;
+    $("previewFavoriteButton").textContent = favorite ? "★" : "☆";
+    $("previewFavoriteButton").setAttribute("aria-pressed", String(favorite));
+    $("previewFavoriteButton").setAttribute("aria-label", favorite ? "Quitar de favoritos" : "Guardar en favoritos");
+    $("saveFavoriteButton").textContent = favorite ? "★ GUARDADO EN FAVORITOS" : "☆ GUARDAR FAVORITO";
+    $("saveFavoriteButton").setAttribute("aria-pressed", String(favorite));
+  }
+
+  function renderPreview() {
+    if (!currentSession) return;
+    $("previewTitle").textContent = currentSession.focus;
+    $("previewProfile").textContent = profileLabel() + " · " + modeLabel(currentSession.mode) + " · " + currentSession.focus;
+    $("previewName").textContent = currentSession.name;
+    $("previewMinutes").textContent = String(currentSession.duration);
+    $("previewDescription").textContent = currentSession.description;
+    $("previewTags").innerHTML =
+      currentSession.goals.map(function (goal, index) {
+        return '<span class="tag ' + (index === 0 ? "accent" : "") + '">' + escapeText(labelForObjective(goal)) + (index === 0 ? " · PRINCIPAL" : "") + "</span>";
+      }).join("") +
+      '<span class="tag accent">' + modeLabel(currentSession.mode) + "</span>" +
+      '<span class="tag">' + currentSession.blocks.length + " BLOQUES</span>" +
+      '<span class="tag">' + currentSession.materials.filter(function (id) { return id !== "bw"; }).length + " MATERIALES</span>";
+
+    $("previewBlocks").innerHTML = currentSession.blocks.map(function (block) {
+      var rows = aggregateExercises(block);
+      var blockMeta = block.format === "circuit"
+        ? block.rounds + " VUELTAS · " + block.minutes + " MIN"
+        : block.minutes + " MIN";
+      return (
+        '<article class="block-card">' +
+          '<header class="block-card-header"><strong>' + escapeText(block.label) + "</strong>" +
+          "<span>" + blockMeta + "</span></header>" +
+          '<ul class="block-exercises">' +
+          rows.map(function (row) {
+            var repeat = block.format === "circuit" ? " ×" + block.rounds + " VUELTAS" : (row.count > 1 ? " ×" + row.count : "");
+            return "<li><span>" + escapeText(row.name) + repeat +
+              "</span><small>" + escapeText(row.prescription) + "</small></li>";
+          }).join("") +
+          "</ul>" +
+        "</article>"
+      );
+    }).join("");
+    updateFavoriteButtons();
+  }
+
+  function openOverlay(id) {
+    var overlay = $(id);
+    overlay.classList.add("active");
+    overlay.setAttribute("aria-hidden", "false");
+    $("home").setAttribute("inert", "");
+    overlay.scrollTop = 0;
+    var focusTarget = overlay.querySelector("button");
+    if (focusTarget) focusTarget.focus({ preventScroll: true });
+  }
+
+  function closeOverlay(id) {
+    var overlay = $(id);
+    overlay.classList.remove("active");
+    overlay.setAttribute("aria-hidden", "true");
+    if (!$("preview").classList.contains("active") &&
+        !$("player").classList.contains("active") &&
+        !$("summary").classList.contains("active")) {
+      $("home").removeAttribute("inert");
+    }
+  }
+
+  function startSession() {
+    if (!currentSession) return;
+    closeOverlay("preview");
+    steps = clone(currentSession.steps);
+    currentStepIndex = 0;
+    $("countdownFirstExercise").textContent = firstWorkStep().name;
+    $("countdown").classList.add("active");
+    $("countdown").setAttribute("aria-hidden", "false");
+    var count = 5;
+    $("countdownNumber").textContent = String(count);
+    beep(520, .07);
+    var countdownHandle = setInterval(function () {
+      count -= 1;
+      if (count > 0) {
+        $("countdownNumber").textContent = String(count);
+        beep(520 + (5 - count) * 70, .07);
+        vibrate(20);
+      } else {
+        clearInterval(countdownHandle);
+        $("countdown").classList.remove("active");
+        $("countdown").setAttribute("aria-hidden", "true");
+        beginPlayer();
+      }
+    }, 1000);
+  }
+
+  function firstWorkStep() {
+    return steps.find(function (step) { return step.type === "work"; }) || { name: "Primera actividad" };
+  }
+
+  function beginPlayer() {
+    $("player").classList.add("active");
+    $("player").setAttribute("aria-hidden", "false");
+    $("home").setAttribute("inert", "");
+    $("playerSessionName").textContent = currentSession.name;
+    renderBlockStrip();
+    startedAt = Date.now();
+    pausedTotal = 0;
+    pauseStartedAt = 0;
+    running = false;
+    loadStep(0);
+    setRunning(true);
+    requestWakeLock();
+  }
+
+  function renderBlockStrip() {
+    $("blockStrip").innerHTML = currentSession.blocks.map(function (block, index) {
+      return '<button type="button" class="block-chip" data-block-jump="' + index + '">' +
+        (index + 1) + " · " + escapeText(block.label.replace(" · PRINCIPAL", "").replace(" · COMPLEMENTARIO", "")) +
+        "</button>";
+    }).join("");
+    document.querySelectorAll("[data-block-jump]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        jumpToBlock(Number(button.dataset.blockJump));
+      });
+    });
+  }
+
+  function updateBlockStrip() {
+    var step = steps[currentStepIndex];
+    var currentBlock = step.type === "transition" && Number.isInteger(step.nextBlockIndex)
+      ? step.nextBlockIndex
+      : step.blockIndex;
+    document.querySelectorAll("[data-block-jump]").forEach(function (button) {
+      var blockIndex = Number(button.dataset.blockJump);
+      if (blockIndex === currentBlock) button.setAttribute("aria-current", "step");
+      else button.removeAttribute("aria-current");
+      button.classList.toggle("done", blockIndex < currentBlock);
+    });
+    var active = document.querySelector('[data-block-jump="' + currentBlock + '"]');
+    if (active) active.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }
+
+  function jumpToBlock(blockIndex) {
+    var index = steps.findIndex(function (step) {
+      return step.blockIndex === blockIndex && step.type === "work";
+    });
+    if (index < 0) return;
+    currentStepIndex = index;
+    loadStep(index);
+    beep(620, .08);
+  }
+
+  function nextWorkAfter(index) {
+    for (var position = index + 1; position < steps.length; position += 1) {
+      if (steps[position].type === "work") return steps[position];
+    }
+    return null;
+  }
+
+  function loadStep(index) {
+    var step = steps[index];
+    if (!step) return;
+    currentStepIndex = index;
+    stepRemaining = step.duration;
+    lastBeepSecond = -1;
+    var stage = $("playerStage");
+    stage.className = "player-stage";
+    if (!running) stage.classList.add("paused");
+
+    if (step.type === "transition") {
+      stage.classList.add("transition");
+      $("stageState").textContent = "TRANSICIÓN";
+      $("timerCaption").textContent = "PREPARA";
+      $("stageLead").textContent = "SIGUIENTE";
+      $("stageExercise").textContent = step.nextName;
+      $("stagePrescription").textContent = step.nextPrescription;
+      $("nextExercise").textContent = "";
+    } else {
+      if (step.phase === "warmup" || step.phase === "cooldown") stage.classList.add("warm");
+      $("stageState").textContent = step.phase === "warmup"
+        ? "CALENTAMIENTO"
+        : step.phase === "cooldown" ? "MOVILIDAD FINAL"
+        : step.round ? "VUELTA " + step.round + "/" + step.rounds : "EJERCICIO";
+      $("timerCaption").textContent = "TRABAJO";
+      $("stageLead").textContent = step.round ? step.blockLabel : "";
+      $("stageExercise").textContent = step.name;
+      $("stagePrescription").textContent = step.prescription;
+      var next = nextWorkAfter(index);
+      $("nextExercise").textContent = next ? next.name : "FIN DE SESIÓN";
+    }
+
+    var visibleBlockIndex = step.type === "transition" && Number.isInteger(step.nextBlockIndex)
+      ? step.nextBlockIndex
+      : step.blockIndex;
+    $("playerBlockPosition").textContent = "BLOQUE " + (visibleBlockIndex + 1) + "/" + currentSession.blocks.length;
+    updateBlockStrip();
+    paintPlayer();
+    if (running) stepEndAt = Date.now() + stepRemaining * 1000;
+    vibrate(step.type === "transition" ? 25 : [35, 45, 35]);
+  }
+
+  function completedPlannedSeconds() {
+    var sum = 0;
+    for (var index = 0; index < currentStepIndex; index += 1) sum += steps[index].duration;
+    if (steps[currentStepIndex]) sum += steps[currentStepIndex].duration - stepRemaining;
+    return sum;
+  }
+
+  function paintPlayer() {
+    var step = steps[currentStepIndex];
+    if (!step) return;
+    $("timerValue").textContent = stepRemaining < 60 ? String(stepRemaining) : formatClock(stepRemaining);
+    $("timerRingFill").style.strokeDashoffset = String(
+      RING_CIRCUMFERENCE * (1 - stepRemaining / step.duration)
+    );
+    var done = completedPlannedSeconds();
+    var total = currentSession.duration * 60;
+    $("playerProgress").style.width = Math.min(100, done / total * 100) + "%";
+    $("playerElapsed").textContent = formatClock(done);
+    $("playerRemaining").textContent = formatClock(total - done);
+  }
+
+  function setRunning(shouldRun) {
+    if (running === shouldRun) return;
+    running = shouldRun;
+    $("playerStage").classList.toggle("paused", !running);
+    $("playPauseButton").textContent = running ? "Ⅱ" : "▶";
+    $("playPauseButton").setAttribute("aria-label", running ? "Pausar sesión" : "Reanudar sesión");
+    $("playPauseButton").setAttribute("aria-pressed", String(running));
+    if (running) {
+      if (pauseStartedAt) {
+        pausedTotal += Date.now() - pauseStartedAt;
+        pauseStartedAt = 0;
+      }
+      stepEndAt = Date.now() + stepRemaining * 1000;
+      clearInterval(tickHandle);
+      tickHandle = setInterval(timerLoop, 200);
+    } else {
+      clearInterval(tickHandle);
+      tickHandle = null;
+      if (!pauseStartedAt) pauseStartedAt = Date.now();
+    }
+  }
+
+  function timerLoop() {
+    var remaining = Math.max(0, Math.ceil((stepEndAt - Date.now()) / 1000));
+    if (remaining !== stepRemaining) {
+      stepRemaining = remaining;
+      if (stepRemaining <= 3 && stepRemaining > 0 && stepRemaining !== lastBeepSecond) {
+        beep(680, .08);
+        lastBeepSecond = stepRemaining;
+      }
+      if (stepRemaining === 0) {
+        beep(900, .16);
+        goToNextStep();
+        return;
+      }
+    }
+    paintPlayer();
+  }
+
+  function goToNextStep() {
+    if (currentStepIndex < steps.length - 1) {
+      loadStep(currentStepIndex + 1);
+    } else {
+      finishSession();
+    }
+  }
+
+  function goToPreviousStep() {
+    if (currentStepIndex > 0) loadStep(currentStepIndex - 1);
+    else loadStep(0);
+  }
+
+  function openQuitModal() {
+    modalWasRunning = running;
+    if (running) setRunning(false);
+    $("quitModal").classList.add("active");
+    $("quitModal").setAttribute("aria-hidden", "false");
+    $("confirmQuitButton").focus();
+  }
+
+  function closeQuitModal() {
+    $("quitModal").classList.remove("active");
+    $("quitModal").setAttribute("aria-hidden", "true");
+    if (modalWasRunning) setRunning(true);
+    else $("quitButton").focus();
+  }
+
+  function quitSession() {
+    clearInterval(tickHandle);
+    tickHandle = null;
+    running = false;
+    $("quitModal").classList.remove("active");
+    $("quitModal").setAttribute("aria-hidden", "true");
+    closeOverlay("player");
+    releaseWakeLock();
+    renderHome();
+  }
+
+  function finishSession() {
+    clearInterval(tickHandle);
+    tickHandle = null;
+    running = false;
+    var openPauseTime = pauseStartedAt ? Date.now() - pauseStartedAt : 0;
+    var actualSeconds = Math.max(1, Math.floor((Date.now() - startedAt - pausedTotal - openPauseTime) / 1000));
+    var actualMinutes = Math.max(1, Math.round(actualSeconds / 60));
+    var date = new Date();
+    var entry = {
+      id: uid("history"),
+      sessionId: currentSession.id,
+      name: currentSession.name,
+      goals: currentSession.goals.slice(),
+      plannedMinutes: currentSession.duration,
+      actualMinutes: actualMinutes,
+      completedAt: date.toISOString(),
+      dateLabel: date.toLocaleDateString("es-ES", { day: "numeric", month: "short", year: "numeric" }).toUpperCase()
+    };
+    activeProfile().history.unshift(entry);
+    activeProfile().history = activeProfile().history.slice(0, 50);
+    saveState();
+    currentSummary = entry;
+    closeOverlay("player");
+    renderSummary();
+    openOverlay("summary");
+    releaseWakeLock();
+    beepSequence();
+    vibrate([70, 45, 70, 45, 120]);
+  }
+
+  function renderSummary() {
+    if (!currentSession || !currentSummary) return;
+    $("summarySessionName").textContent = currentSession.name;
+    $("summaryDuration").textContent = String(currentSummary.actualMinutes);
+    $("summaryBlocks").textContent = String(currentSession.blocks.length);
+    $("summaryExercises").textContent = String(currentSession.steps.filter(function (step) {
+      return step.type === "work";
+    }).length);
+    $("summaryTags").innerHTML =
+      '<span class="tag accent">' + profileLabel() + "</span>" +
+      currentSession.goals.map(function (goal) {
+        return '<span class="tag">' + escapeText(labelForObjective(goal)) + "</span>";
+      }).join("");
+    updateFavoriteButtons();
+  }
+
+  function toggleFavorite() {
+    if (!currentSession) return;
+    var favorites = activeProfile().favorites;
+    var index = favorites.findIndex(function (session) { return session.id === currentSession.id; });
+    if (index >= 0) {
+      favorites.splice(index, 1);
+      showToast("Sesión eliminada de favoritos.");
+    } else {
+      favorites.push(clone(currentSession));
+      showToast("Sesión guardada en favoritos.");
+    }
+    saveState();
+    updateFavoriteButtons();
+    renderFavorites();
+  }
+
+  function summaryHome() {
+    closeOverlay("summary");
+    currentSummary = null;
+    renderHome();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function repeatSession() {
+    closeOverlay("summary");
+    renderPreview();
+    openOverlay("preview");
+  }
+
+  function wrapCanvasText(context, text, x, y, maxWidth, lineHeight, maxLines) {
+    var words = text.split(" ");
+    var line = "";
+    var lines = [];
+    words.forEach(function (word) {
+      var test = line ? line + " " + word : word;
+      if (context.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = test;
+      }
+    });
+    if (line) lines.push(line);
+    lines.slice(0, maxLines).forEach(function (item, index) {
+      context.fillText(item, x, y + index * lineHeight);
+    });
+    return y + Math.min(lines.length, maxLines) * lineHeight;
+  }
+
+  function drawShareCard() {
+    var canvas = $("shareCanvas");
+    var context = canvas.getContext("2d");
+    var levelColors = {
+      beginner: ["#37c98b", "#8ee9c0", "rgba(55,201,139,.34)"],
+      intermediate: ["#9d6bff", "#c5a6ff", "rgba(157,107,255,.34)"],
+      pro: ["#ff694f", "#ffae92", "rgba(255,105,79,.34)"]
+    };
+    var colors = levelColors[state.activeProfile];
+    var accent = colors[0];
+    var accent2 = colors[1];
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#0a0b10";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    var gradient = context.createRadialGradient(850, 110, 20, 850, 110, 560);
+    gradient.addColorStop(0, colors[2]);
+    gradient.addColorStop(1, "rgba(10,11,16,0)");
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, 700);
+
+    context.fillStyle = accent;
+    context.fillRect(72, 72, 14, 1206);
+    context.fillStyle = "#f4f6fb";
+    context.font = "76px Impact, sans-serif";
+    context.fillText("BRUTAL", 130, 170);
+    context.fillStyle = accent;
+    context.fillText("OS", 390, 170);
+    context.fillStyle = "#abb1c2";
+    context.font = "28px monospace";
+    context.fillText("V3.1 · " + profileLabel() + " · " + modeLabel(currentSession.mode), 130, 218);
+
+    context.fillStyle = "#abb1c2";
+    context.font = "26px monospace";
+    context.fillText("SESIÓN COMPLETADA", 130, 350);
+    context.fillStyle = "#f4f6fb";
+    context.font = "92px Impact, sans-serif";
+    var afterTitle = wrapCanvasText(context, currentSession.name, 130, 455, 810, 98, 3);
+
+    context.fillStyle = accent2;
+    context.font = "30px monospace";
+    context.fillText(currentSession.goals.map(labelForObjective).join(" + ").toUpperCase(), 130, afterTitle + 40);
+
+    context.fillStyle = "#151822";
+    context.fillRect(130, 820, 820, 240);
+    context.fillStyle = "#f4f6fb";
+    context.font = "110px Impact, sans-serif";
+    context.fillText(String(currentSummary.actualMinutes), 190, 960);
+    context.fillStyle = "#abb1c2";
+    context.font = "24px monospace";
+    context.fillText("MINUTOS", 190, 1005);
+
+    context.fillStyle = "#f4f6fb";
+    context.font = "110px Impact, sans-serif";
+    context.fillText(String(currentSession.blocks.length), 520, 960);
+    context.fillStyle = "#abb1c2";
+    context.font = "24px monospace";
+    context.fillText("BLOQUES", 520, 1005);
+
+    context.fillStyle = accent;
+    context.font = "34px monospace";
+    context.fillText("TRABAJO HECHO.", 130, 1160);
+    context.fillStyle = "#868da1";
+    context.font = "24px monospace";
+    context.fillText(currentSummary.dateLabel, 130, 1215);
+    return canvas;
+  }
+
+  function canvasBlob(canvas) {
+    return new Promise(function (resolve) {
+      canvas.toBlob(resolve, "image/png", .96);
+    });
+  }
+
+  async function shareSummary() {
+    if (!currentSession || !currentSummary) return;
+    var canvas = drawShareCard();
+    var blob = await canvasBlob(canvas);
+    if (!blob) {
+      showToast("No se pudo crear la tarjeta.");
+      return;
+    }
+    var fileName = "brutal-os-" + currentSummary.completedAt.slice(0, 10) + ".png";
+    var file = new File([blob], fileName, { type: "image/png" });
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: "BRUTAL OS · " + currentSession.name,
+          text: "Entrenamiento completado · " + currentSummary.actualMinutes + " min",
+          files: [file]
+        });
+        return;
+      }
+    } catch (error) {
+      if (error && error.name === "AbortError") return;
+    }
+    var link = document.createElement("a");
+    link.download = fileName;
+    link.href = URL.createObjectURL(blob);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function () { URL.revokeObjectURL(link.href); }, 1000);
+    showToast("Tarjeta guardada como imagen.");
+  }
+
+  function showToast(message) {
+    clearTimeout(toastHandle);
+    $("toast").textContent = message;
+    $("toast").classList.add("show");
+    toastHandle = setTimeout(function () {
+      $("toast").classList.remove("show");
+    }, 2500);
+  }
+
+  function beep(frequency, duration) {
+    if (!soundOn) return;
+    try {
+      audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioContext.state === "suspended") audioContext.resume();
+      var oscillator = audioContext.createOscillator();
+      var gain = audioContext.createGain();
+      oscillator.frequency.value = frequency;
+      oscillator.type = "sine";
+      gain.gain.setValueAtTime(.001, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.28, audioContext.currentTime + .02);
+      gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + duration);
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + duration + .04);
+    } catch (error) {}
+  }
+
+  function beepSequence() {
+    [760, 980, 1240].forEach(function (frequency, index) {
+      setTimeout(function () { beep(frequency, .16); }, index * 150);
+    });
+  }
+
+  function vibrate(pattern) {
+    if (navigator.vibrate) navigator.vibrate(pattern);
+  }
+
+  function toggleSound() {
+    soundOn = !soundOn;
+    saveSound();
+    updateSoundButtons();
+    if (soundOn) beep(660, .08);
+  }
+
+  function updateSoundButtons() {
+    ["soundButton", "playerSoundButton"].forEach(function (id) {
+      var button = $(id);
+      button.textContent = soundOn ? "◖))" : "◖×";
+      button.setAttribute("aria-pressed", String(soundOn));
+      button.setAttribute("aria-label", soundOn ? "Desactivar sonido" : "Activar sonido");
+    });
+  }
+
+  async function requestWakeLock() {
+    try {
+      if ("wakeLock" in navigator) wakeLock = await navigator.wakeLock.request("screen");
+    } catch (error) {}
+  }
+
+  function releaseWakeLock() {
+    if (wakeLock) {
+      wakeLock.release().catch(function () {});
+      wakeLock = null;
+    }
+  }
+
+  function bindEvents() {
+    document.querySelectorAll("[data-level-choice]").forEach(function (button) {
+      button.addEventListener("click", function () { setLevel(button.dataset.levelChoice); });
+    });
+    document.querySelectorAll("[data-mode-choice]").forEach(function (button) {
+      button.addEventListener("click", function () { setMode(button.dataset.modeChoice); });
+    });
+    $("selectAllMaterials").addEventListener("click", function () {
+      activeProfile().materials = DEFAULT_MATERIALS.slice();
+      saveState();
+      renderMaterials();
+    });
+    $("clearMaterials").addEventListener("click", function () {
+      activeProfile().materials = ["bw"];
+      saveState();
+      renderMaterials();
+    });
+    $("generateButton").addEventListener("click", function () { generateSession(); });
+    document.querySelectorAll("[data-close-preview]").forEach(function (button) {
+      button.addEventListener("click", function () { closeOverlay("preview"); });
+    });
+    $("previewFavoriteButton").addEventListener("click", toggleFavorite);
+    $("startSessionButton").addEventListener("click", startSession);
+    $("soundButton").addEventListener("click", toggleSound);
+    $("playerSoundButton").addEventListener("click", toggleSound);
+    $("playPauseButton").addEventListener("click", function () { setRunning(!running); });
+    $("previousStepButton").addEventListener("click", goToPreviousStep);
+    $("nextStepButton").addEventListener("click", goToNextStep);
+    $("quitButton").addEventListener("click", openQuitModal);
+    $("continueButton").addEventListener("click", closeQuitModal);
+    $("confirmQuitButton").addEventListener("click", quitSession);
+    $("quitModal").addEventListener("click", function (event) {
+      if (event.target === $("quitModal")) closeQuitModal();
+    });
+    $("saveFavoriteButton").addEventListener("click", toggleFavorite);
+    $("shareButton").addEventListener("click", shareSummary);
+    $("repeatButton").addEventListener("click", repeatSession);
+    $("summaryHomeButton").addEventListener("click", summaryHome);
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "visible" && $("player").classList.contains("active")) requestWakeLock();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        if ($("quitModal").classList.contains("active")) closeQuitModal();
+        else if ($("preview").classList.contains("active")) closeOverlay("preview");
+      }
+    });
+  }
+
+  setDate();
+  bindEvents();
+  renderHome();
+}());
+
+  </script>
+</body>
+</html>
